@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 trait DateTrait
 {
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'],nullable: true)]
     private $created_at;
 
     public function getCreatedAt(): ?\DateTimeImmutable

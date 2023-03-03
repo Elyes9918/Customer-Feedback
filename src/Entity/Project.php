@@ -27,7 +27,7 @@ class Project
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'projects')]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: feedback::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Feedback::class)]
     private Collection $feedbacks;
 
     #[ORM\Column(length: 255, nullable: true)]
