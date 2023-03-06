@@ -1,9 +1,12 @@
 <?php 
 
-namespace App\Entity\Trait;
+namespace App\Trait;
 
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+
 
 
 trait DateTrait
@@ -29,6 +32,10 @@ trait DateTrait
 
     public function getModifiedAt(): ?\DateTimeInterface
     {
+        if($this->modified_at==null){
+            return new DateTimeImmutable('0001-01-01');
+        }
+
         return $this->modified_at;
     }
 
@@ -39,10 +46,18 @@ trait DateTrait
         return $this;
     }
 
+    
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->modified_at = new DateTime();
+    }
 
-
-
-
-
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->modified_at = new DateTime();
+    }
 
 }

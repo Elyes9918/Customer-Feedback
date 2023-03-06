@@ -24,6 +24,7 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
+
 class AuthenticationController extends AbstractController {
 
     use ResetPasswordControllerTrait;
@@ -87,7 +88,9 @@ class AuthenticationController extends AbstractController {
         );
         $user->setRoles($data['roles']);
         $user->setCreatedAt(new DateTimeImmutable());
+        $user->setStatus(USER::STATUS_NOT_ACTIVATED);
 
+        
         $entityManager->persist($user);
         $entityManager->flush();
 

@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\DateTrait;
 use App\Repository\UserRepository;
+use App\Trait\DateTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -12,12 +13,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
     use DateTrait;
+
+    //Status Constants
+    const STATUS_NOT_ACTIVATED = 0;
+    const STATUS_ACTIVATED = 1;
+    const STATUS_BLOCKED = 2;
+
+  
+
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -51,8 +60,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $last_name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $birth_date = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $birth_date = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $status = null;
@@ -248,12 +257,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeInterface
+    public function getBirthDate(): ?string
     {
         return $this->birth_date;
     }
 
-    public function setBirthDate(?\DateTimeInterface $birth_date): self
+    public function setBirthDate(?string $birth_date): self
     {
         $this->birth_date = $birth_date;
 
