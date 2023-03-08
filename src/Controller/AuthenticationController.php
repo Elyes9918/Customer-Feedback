@@ -11,6 +11,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
-
+#[Route('/api')]
 class AuthenticationController extends AbstractController {
 
     use ResetPasswordControllerTrait;
@@ -38,41 +39,9 @@ class AuthenticationController extends AbstractController {
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/login', name: 'api_login', methods:"POST")]
-    public function login(Request $request): Response
-    {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_admin');
-        }
-
-        $user = new User();
-        $data = json_decode($request->getContent(), true);
-        $user->setEmail($data["security"]["credentials"]["login"]);
-        $user->setPassword($data["security"]["credentials"]["password"]);
-
-       
-
-        if (null === $user) {
-            return $this->json([
-                'message' => 'missing credentials',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-      
-        return $this->json([
-            'user'  => $user->getUserIdentifier(),
-            'message' => "User authenticated succesfully",
-        ]);
-    }
-
-    #[Route(path: '/logout', name: 'app_logout',methods:"GET")]
-    public function logout(): void
-    {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
+    
     #[Route('/register', name: 'app_register', methods: "POST")]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
 
 
@@ -89,30 +58,26 @@ class AuthenticationController extends AbstractController {
         $user->setRoles($data['roles']);
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setStatus(USER::STATUS_NOT_ACTIVATED);
+        $user->setIsVerified(1);
 
         
         $entityManager->persist($user);
         $entityManager->flush();
 
         // generate a signed url and email it to the user
-        $this->emailVerifier->sendEmailConfirmation(
-            'app_verify_email',
-            $user,
-            (new TemplatedEmail())
-                ->from(new Address('mailer@mailer.de', 'mailer bot'))
-                ->to($user->getEmail())
-                ->subject('Please Confirm your Email')
-                ->htmlTemplate('registration/confirmation_email.html.twig')
-        );
+        // $this->emailVerifier->sendEmailConfirmation(
+        //     'app_verify_email',
+        //     $user,
+        //     (new TemplatedEmail())
+        //         ->from(new Address('mailer@mailer.de', 'mailer bot'))
+        //         ->to($user->getEmail())
+        //         ->subject('Please Confirm your Email')
+        //         ->htmlTemplate('registration/confirmation_email.html.twig')
+        // );
 
-         return $userAuthenticator->authenticateUser(
-            $user,
-            $authenticator,
-            $request
-        );
         // // do anything else you need here, like send an email
 
-       
+        return new JsonResponse(['messsage' => 'User Created successfully'], 201); 
     }
 
 
@@ -120,11 +85,15 @@ class AuthenticationController extends AbstractController {
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
-        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $user = new User();
+        $data = json_decode($request->getContent(), true);
+        $user->setEmail($data['email']);
+        $user->setId($data['id']);
+        
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
@@ -136,6 +105,9 @@ class AuthenticationController extends AbstractController {
 
         return new JsonResponse(['messsage' => 'User Verified successfully'], 201);
     }
+
+
+
 
     #[Route('/reset-password', name: 'app_forgot_password_request',methods:'POST')]
     public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator): Response
@@ -151,7 +123,6 @@ class AuthenticationController extends AbstractController {
         
     }
 
-    
 
     /**
      * Confirmation page after a user has requested a password reset.
