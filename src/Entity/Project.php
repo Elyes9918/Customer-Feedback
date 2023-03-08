@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\DateTrait;
+use App\Trait\DateTrait;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
-
     use DateTrait;
 
 
@@ -27,7 +27,7 @@ class Project
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'projects')]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: feedback::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Feedback::class)]
     private Collection $feedbacks;
 
     #[ORM\Column(length: 255, nullable: true)]
