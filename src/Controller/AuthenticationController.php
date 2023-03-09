@@ -55,7 +55,7 @@ class AuthenticationController extends AbstractController {
                 $data['password']
             )
         );
-        $user->setRoles($data['roles']);
+        $user->setRoles([]);
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setStatus(USER::STATUS_NOT_ACTIVATED);
         $user->setIsVerified(1);
