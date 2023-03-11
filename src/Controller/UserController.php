@@ -27,7 +27,7 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/users/{id}', name: 'app_user_get', methods: "GET")]
+    #[Route('/users/user/{id}', name: 'app_user_get', methods: "GET")]
     public function getUserById(int $id): JsonResponse
     {
         $userDto = new UserDto();
@@ -35,6 +35,16 @@ class UserController extends AbstractController
         
         return $this->json($userDto);
     }
+
+    #[Route('/users/user', name: 'app_user_get_by_email', methods: "GET")]
+    public function getUserByEmail(Request $request): JsonResponse
+    {
+        $userDto = new UserDto();
+        $userDto = $this->userService->getUserByEmail($request->query->get('email'));
+        
+        return $this->json($userDto);
+    }
+
 
 
     #[Route('/users/{id}', name: 'app_users_patch', methods: "PATCH")]

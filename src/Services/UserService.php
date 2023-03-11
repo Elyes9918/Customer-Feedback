@@ -76,6 +76,8 @@ class UserService{
             // $projects[] = ['id' => $project->getId() ]; //this is an object 
             $projects[] = $project->getId();
         }
+    
+    
 
         foreach($user->getFeedbacks() as $feedback){
             $feedbacks[] = $feedback->getId() ;
@@ -99,6 +101,43 @@ class UserService{
 
         return $userDto;
     }
+
+    public function getUserByEmail(string $email) : UserDto {
+
+        $user = $this->userRepository->findOneByEmail($email);
+
+        $userDto = new UserDto();
+        $projects = [];
+        $feedbacks = [];
+
+        foreach($user->getProjects() as $project){
+            // $projects[] = ['id' => $project->getId() ]; //this is an object 
+            $projects[] = $project->getId();
+        }
+
+        foreach($user->getFeedbacks() as $feedback){
+            $feedbacks[] = $feedback->getId() ;
+        }
+
+        
+        $userDto->setId($user->getId());
+        $userDto->setEmail($user->getEmail());
+        $userDto->setCreatedAt($user->getCreatedAt()->format('Y-m-d H:i:s'));
+        $userDto->setModifiedAt($user->getModifiedAt()->format('Y-m-d H:i:s'));
+        $userDto->setFirstName($user->getFirstName());
+        $userDto->setLastName($user->getLastName());
+        $userDto->setBirthDate($user->getBirthDate());
+        $userDto->setStatus($user->getStatus());
+        $userDto->setAddress($user->getAddress());
+        $userDto->setPhoneNumber($user->getPhoneNumber());
+        $userDto->setCompany($user->getCompany());
+        $userDto->setProjectsId($projects);
+        $userDto->setFeedbacksId($feedbacks);
+        $userDto->setRoles($user->getRoles());
+
+        return $userDto;
+    }
+    
 
     public function updateUser(Request $request,int $id): void {
        
