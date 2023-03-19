@@ -39,7 +39,7 @@ class AuthenticationController extends AbstractController {
         $this->emailVerifier = $emailVerifier;
     }
 
-    
+
     #[Route('/register', name: 'app_register', methods: "POST")]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {

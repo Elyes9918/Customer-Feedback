@@ -25,8 +25,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const STATUS_ACTIVATED = 1;
     const STATUS_BLOCKED = 2;
 
-  
-
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

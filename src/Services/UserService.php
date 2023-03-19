@@ -56,6 +56,7 @@ class UserService{
             $userDto->setProjectsId($projects);
             $userDto->setFeedbacksId($feedbacks);
             $userDto->setRoles($user->getRoles());
+            $userDto->setIsVerified($user->isVerified());
 
             $userDtos[] = $userDto;
         }
@@ -134,6 +135,7 @@ class UserService{
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
         $userDto->setRoles($user->getRoles());
+        $userDto->setIsVerified($user->isVerified());
 
         return $userDto;
     }

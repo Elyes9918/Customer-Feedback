@@ -28,7 +28,6 @@ security:
                 # where to redirect after logout
                 # target: app_any_route
 
-
         api:
             pattern:   ^/api
             stateless: true
@@ -41,19 +40,19 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-    role_hierarchy:
-        ROLE_MEMBER: ROLE_MEMBER
-        ROLE_ADMIN: ROLE_ADMIN
-        ROLE_CLIENT: ROLE_CLIENT
-        ROLE_GESTIONNAIRE: ROLE_GESTIONNAIRE
+    # role_hierarchy:
+    #     ROLE_ADMIN: ROLE_ADMIN
+    #     ROLE_GESTIONNAIRE: ROLE_GESTIONNAIRE
+    #     ROLE_MEMBER: ROLE_MEMBER
+    #     ROLE_CLIENT: ROLE_CLIENT
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         #- { path: ^/api/products, roles: ROLE_PRODUCT }
         #- { path: ^/api/categories, roles: ROLE_CATEGORY }
-        - { path: ^/api/v1,  roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/v1/users, roles: ROLE_ADMIN}
+        - { path: ^/api/v1/users, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER]}
+        - { path: ^/api/v1,  roles:  [IS_AUTHENTICATED_FULLY]}
         - { path: ^/api, roles: PUBLIC_ACCESS }
      
         

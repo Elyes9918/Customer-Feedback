@@ -16,9 +16,11 @@ class UserDto {
     private ?string $address=null;
     private ?string $phoneNumber=null;
     private ?string $company=null;
+    private ?bool $isVerified=null;
     private array $projectsId= [];
     private array $feedbacksId= [];
     private array $roles= [];
+
 
     
     public function __construct(
@@ -39,6 +41,25 @@ class UserDto {
     public function setId(?int $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+
+      /**
+     * Get the value of isVerified
+     */
+    public function getIsVerified(): ?int
+    {
+        return $this->isVerified;
+    }
+
+    /**
+     * Set the value of isVerified
+     */
+    public function setIsVerified(?int $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
