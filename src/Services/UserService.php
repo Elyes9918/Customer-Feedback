@@ -96,6 +96,7 @@ class UserService{
         $userDto->setAddress($user->getAddress());
         $userDto->setPhoneNumber($user->getPhoneNumber());
         $userDto->setCompany($user->getCompany());
+        $userDto->setIsVerified($user->isVerified());
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
         $userDto->setRoles($user->getRoles());
