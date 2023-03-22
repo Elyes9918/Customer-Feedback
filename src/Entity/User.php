@@ -76,11 +76,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Country = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $last_login = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token_id = null;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->historiques = new ArrayCollection();
+
+        $this->token_id = md5(uniqid($this->email, true));
     }
 
     public function getId(): ?int
@@ -330,6 +341,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->Country;
+    }
+
+    public function setCountry(?string $Country): self
+    {
+        $this->Country = $Country;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->last_login;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $last_login): self
+    {
+        $this->last_login = $last_login;
+
+        return $this;
+    }
+
+    public function getTokenId(): ?string
+    {
+        return $this->token_id;
+    }
+
+    public function setTokenId(?string $token_id): self
+    {
+        $this->token_id = $token_id;
 
         return $this;
     }

@@ -5,7 +5,7 @@ namespace App\DataTransferObjects;
 
 class UserDto {
 
-    private ?int $id = null;
+    private ?string $id=null;
     private ?string $email=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
@@ -16,6 +16,8 @@ class UserDto {
     private ?string $address=null;
     private ?string $phoneNumber=null;
     private ?string $company=null;
+    private ?string $country=null;
+    private ?string $lastLogin=null;
     private ?bool $isVerified=null;
     private array $projectsId= [];
     private array $feedbacksId= [];
@@ -25,22 +27,40 @@ class UserDto {
     
     public function __construct(
     ) {}
-   
 
-    /**
-     * Get the value of id
+
+     /**
+     * Get the value of country
      */
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * Set the value of id
+     * Set the value of country
      */
-    public function setId(?int $id): self
+    public function setId(?string $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+     /**
+     * Get the value of country
+     */
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    /**
+     * Set the value of country
+     */
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }
@@ -96,6 +116,24 @@ class UserDto {
     public function setCreatedAt(?String $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of lastLogin
+     */
+    public function getLastLogin(): ?String
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Set the value of lastLogin
+     */
+    public function setLastLogin(?String $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }

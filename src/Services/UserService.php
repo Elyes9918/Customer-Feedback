@@ -8,6 +8,8 @@ use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class UserService{
 
@@ -16,7 +18,8 @@ class UserService{
         private UserRepository $userRepository,
         private ManagerRegistry $doctrine,
         private ProjectRepository $projectRepository,
-        private FeedbackRepository $feedbackRepository)
+        private FeedbackRepository $feedbackRepository,
+        private UserPasswordHasherInterface $passwordHasher)
         {    
             
         }
@@ -42,7 +45,7 @@ class UserService{
             }
 
             $userDto = new UserDto();
-            $userDto->setId($user->getId());
+            $userDto->setId($user->getTokenId());
             $userDto->setEmail($user->getEmail());
             $userDto->setCreatedAt($user->getCreatedAt()->format('Y-m-d H:i:s'));
             $userDto->setModifiedAt($user->getModifiedAt()->format('Y-m-d H:i:s'));
@@ -53,6 +56,8 @@ class UserService{
             $userDto->setAddress($user->getAddress());
             $userDto->setPhoneNumber($user->getPhoneNumber());
             $userDto->setCompany($user->getCompany());
+            $userDto->setCountry($user->getCountry());
+            $userDto->setLastLogin($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null);
             $userDto->setProjectsId($projects);
             $userDto->setFeedbacksId($feedbacks);
             $userDto->setRoles($user->getRoles());
@@ -65,9 +70,9 @@ class UserService{
     }
 
 
-    public function getUserById(int $id) : UserDto {
+    public function getUserById(string $id) : UserDto {
 
-        $user = $this->userRepository->find($id);
+        $user = $this->userRepository->findOneBy(['token_id' => $id]);
 
         $userDto = new UserDto();
         $projects = [];
@@ -84,8 +89,7 @@ class UserService{
             $feedbacks[] = $feedback->getId() ;
         }
 
-        
-        $userDto->setId($user->getId());
+        $userDto->setId($user->getTokenId());
         $userDto->setEmail($user->getEmail());
         $userDto->setCreatedAt($user->getCreatedAt()->format('Y-m-d H:i:s'));
         $userDto->setModifiedAt($user->getModifiedAt()->format('Y-m-d H:i:s'));
@@ -97,6 +101,8 @@ class UserService{
         $userDto->setPhoneNumber($user->getPhoneNumber());
         $userDto->setCompany($user->getCompany());
         $userDto->setIsVerified($user->isVerified());
+        $userDto->setCountry($user->getCountry());
+        $userDto->setLastLogin($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null);
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
         $userDto->setRoles($user->getRoles());
@@ -121,8 +127,7 @@ class UserService{
             $feedbacks[] = $feedback->getId() ;
         }
 
-        
-        $userDto->setId($user->getId());
+        $userDto->setId($user->getTokenId());
         $userDto->setEmail($user->getEmail());
         $userDto->setCreatedAt($user->getCreatedAt()->format('Y-m-d H:i:s'));
         $userDto->setModifiedAt($user->getModifiedAt()->format('Y-m-d H:i:s'));
@@ -133,6 +138,8 @@ class UserService{
         $userDto->setAddress($user->getAddress());
         $userDto->setPhoneNumber($user->getPhoneNumber());
         $userDto->setCompany($user->getCompany());
+        $userDto->setCountry($user->getCountry());
+        $userDto->setLastLogin($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null);
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
         $userDto->setRoles($user->getRoles());
@@ -142,11 +149,10 @@ class UserService{
     }
     
 
-    public function updateUser(Request $request,int $id): void {
+    public function updateUser(Request $request,string $id): void {
        
 
-        $user = $this->userRepository->find($id);
-
+        $user = $this->userRepository->findOneBy(['token_id' => $id]);
 
         $data = json_decode($request->getContent(), true);
 
@@ -165,6 +171,23 @@ class UserService{
         if (isset($data['phoneNumber'])) { $user->setPhoneNumber($data['phoneNumber']); }
 
         if (isset($data['company'])) { $user->setCompany($data['company']); }
+
+        if (isset($data['country'])) { $user->setCountry($data['country']); }
+
+        if (isset($data['lastLogin'])) { $user->setLastLogin($data['lastLogin']); }
+
+        if (isset($data['isVerified'])) { $user->setIsVerified($data['isVerified']); }
+
+        if (isset($data['password'])) { 
+
+            $encodedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $data['password']
+            );
+
+
+            $user->setPassword($encodedPassword);
+         }
 
         if (isset($data['projectId'])) { 
             //Logic to assign a single project with an id passed 
@@ -195,9 +218,9 @@ class UserService{
     }
 
 
-    public function unAssignRole(Request $request,int $id): void {
+    public function unAssignRole(Request $request,string $id): void {
 
-        $user = $this->userRepository->find($id);
+        $user = $this->userRepository->findOneBy(['token_id' => $id]);
 
         $data = json_decode($request->getContent(), true);
 
@@ -215,9 +238,9 @@ class UserService{
 
     }
 
-    public function unAssignProject(Request $request,int $id): void {
+    public function unAssignProject(Request $request,string $id): void {
 
-        $user = $this->userRepository->find($id);
+        $user = $this->userRepository->findOneBy(['token_id' => $id]);
 
         $data = json_decode($request->getContent(), true);
 
@@ -241,9 +264,9 @@ class UserService{
 
     }
 
-    public function unAssignFeedBack(Request $request,int $id): void {
+    public function unAssignFeedBack(Request $request,string $id): void {
 
-        $user = $this->userRepository->find($id);
+        $user = $this->userRepository->findOneBy(['token_id' => $id]);
 
         $data = json_decode($request->getContent(), true);
 

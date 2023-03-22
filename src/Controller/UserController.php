@@ -30,7 +30,7 @@ class UserController extends AbstractController
 
 
     #[Route('/users/user/{id}', name: 'app_user_get', methods: "GET")]
-    public function getUserById(int $id): JsonResponse
+    public function getUserById(string $id): JsonResponse
     {
         $userDto = new UserDto();
         $userDto = $this->userService->getUserById($id);
@@ -50,7 +50,7 @@ class UserController extends AbstractController
 
 
     #[Route('/users/{id}', name: 'app_users_patch', methods: "PATCH")]
-    public function updateUser(Request $request,int $id): JsonResponse
+    public function updateUser(Request $request,string $id): JsonResponse
     {
         
         if ($id == null) {
@@ -65,7 +65,7 @@ class UserController extends AbstractController
 
 
      #[Route('/users/{id}/role', name:'app_user_role_unassign', methods: "PATCH")]
-     public function unAssignRole(Request $request,int $id):JsonResponse{
+     public function unAssignRole(Request $request,string $id):JsonResponse{
 
         if ($id == null) {
             return new JsonResponse("id is incorrect", 200, [], true);
@@ -78,7 +78,7 @@ class UserController extends AbstractController
 
 
     #[Route('/users/{id}/project', name:'app_user_project_unassign', methods: "PATCH")]
-    public function unAssignProject(Request $request,int $id):JsonResponse{
+    public function unAssignProject(Request $request,string $id):JsonResponse{
 
         if ($id == null) {
             return new JsonResponse("id is incorrect", 200, [], true);
@@ -91,7 +91,7 @@ class UserController extends AbstractController
 
 
     #[Route('/users/{id}/feedback', name:'app_user_feedback_unassign', methods: "PATCH")]
-    public function unAssignFeedback(Request $request,int $id):JsonResponse{
+    public function unAssignFeedback(Request $request,string $id):JsonResponse{
 
         if ($id == null) {
             return new JsonResponse("id is incorrect", 200, [], true);
