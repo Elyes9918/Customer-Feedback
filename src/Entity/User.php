@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -85,6 +88,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token_id = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $fireUpdate = true;
+
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
@@ -93,6 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         $this->token_id = md5(uniqid($this->email, true));
     }
+
+    
 
     public function getId(): ?int
     {
@@ -135,7 +144,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_CLIENT';        
+        array_push($roles, "ROLE_USER");
 
         return array_unique($roles);
     }

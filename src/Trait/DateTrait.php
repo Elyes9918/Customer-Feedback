@@ -7,6 +7,10 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+
 
 
 trait DateTrait
@@ -46,18 +50,23 @@ trait DateTrait
         return $this;
     }
 
+
     
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->created_at = new \DateTimeImmutable();
         $this->modified_at = new DateTime();
+      
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->modified_at = new DateTime();
+            $this->modified_at = new DateTime();
+    
     }
+
+
 
 }

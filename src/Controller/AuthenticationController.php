@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
 use DateTimeImmutable;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,7 +36,8 @@ class AuthenticationController extends AbstractController {
     private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier,private ResetPasswordHelperInterface $resetPasswordHelper,
-    private EntityManagerInterface $entityManager)
+    private EntityManagerInterface $entityManager,private UserRepository $userRepository,
+    private ManagerRegistry $doctrine,)
     {
         $this->emailVerifier = $emailVerifier;
     }
@@ -58,7 +61,7 @@ class AuthenticationController extends AbstractController {
         $user->setRoles([]);
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setStatus(USER::STATUS_NOT_ACTIVATED);
-        $user->setIsVerified(1);
+        $user->setIsVerified(0);
 
         
         $entityManager->persist($user);

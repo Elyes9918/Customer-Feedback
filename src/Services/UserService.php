@@ -156,7 +156,7 @@ class UserService{
 
         $data = json_decode($request->getContent(), true);
 
-        if (isset($data['email'])) { $user->setEmail($data['email']);  }
+        if (isset($data['email'])) { $user->setEmail($data['email']);}
 
         if (isset($data['firstName'])) { $user->setFirstName($data['firstName']);  }
 
@@ -216,6 +216,7 @@ class UserService{
         $entityManger->flush();
 
     }
+
 
 
     public function unAssignRole(Request $request,string $id): void {
