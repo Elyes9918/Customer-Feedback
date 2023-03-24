@@ -31,7 +31,10 @@ security:
         api:
             pattern:   ^/api
             stateless: true
+            entry_point: jwt
             jwt: ~
+            refresh_jwt:
+                check_path: /api/token/refresh # or, you may use the `api_refresh_token` route name
 
 
             # activate different ways to authenticate
@@ -51,7 +54,8 @@ security:
     access_control:
         #- { path: ^/api/products, roles: ROLE_PRODUCT }
         #- { path: ^/api/categories, roles: ROLE_CATEGORY }
-        - { path: ^/api/v1/users, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER]}
+        - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/users, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
         - { path: ^/api/v1,  roles:  [IS_AUTHENTICATED_FULLY]}
         - { path: ^/api, roles: PUBLIC_ACCESS }
      
