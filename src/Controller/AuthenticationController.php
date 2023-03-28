@@ -44,7 +44,7 @@ class AuthenticationController extends AbstractController {
 
 
     #[Route('/register', name: 'app_register', methods: "POST")]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,MailerInterface $mailer): Response
     {
 
 
@@ -54,14 +54,22 @@ class AuthenticationController extends AbstractController {
         $user->setEmail($data['email']);
         $user->setPassword(
             $userPasswordHasher->hashPassword(
-                $user,
-                $data['password']
+                $user,"JF#3A&*f5PZ!cK"
             )
         );
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+        $user->setBirthDate($data['birthDate']);
+        $user->setAddress($data['address']);
+        $user->setPhoneNumber($data['phoneNumber']);
+        $user->setCompany($data['company']);
+        $user->setCountry($data['country']);
         $user->setRoles([]);
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setStatus(USER::STATUS_NOT_ACTIVATED);
         $user->setIsVerified(0);
+        $user->setTokenId(md5(uniqid($data['email'], true)));
+
 
         
         $entityManager->persist($user);
@@ -79,6 +87,20 @@ class AuthenticationController extends AbstractController {
         // );
 
         // // do anything else you need here, like send an email
+        $email = (new TemplatedEmail())
+            ->from(new Address('mailer@wevioo.com', 'Wevioo'))
+            ->to("Elyes@gmail.com")
+            ->subject($data['email'] . ' Has joined the platfrom')
+            ->htmlTemplate('emails/newAccount.html.twig')
+            ->context([
+                'userEmail' => $data['email'],
+                'company'  => $data['company'],
+                'createdAt'=> $user->getCreatedAt()->format('Y-m-d H:i:s'),
+                'id'=>$user->getTokenId()
+            ]);
+
+         $mailer->send($email);
+
 
         return new JsonResponse(['messsage' => 'User Created successfully'], 201); 
     }
@@ -241,6 +263,8 @@ class AuthenticationController extends AbstractController {
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
+                'userFirstName'  => $user->getFirstName(),
+                'userLastName'  => $user->getLastName(),
             ])
         ;
 

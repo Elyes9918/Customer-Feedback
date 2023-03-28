@@ -7,9 +7,13 @@ use App\Repository\FeedbackRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 class UserService{
 
@@ -19,7 +23,9 @@ class UserService{
         private ManagerRegistry $doctrine,
         private ProjectRepository $projectRepository,
         private FeedbackRepository $feedbackRepository,
-        private UserPasswordHasherInterface $passwordHasher)
+        private UserPasswordHasherInterface $passwordHasher,
+        private MailerInterface $mailer,
+        private ResetPasswordHelperInterface $resetPasswordHelper)
         {    
             
         }
@@ -176,7 +182,37 @@ class UserService{
 
         if (isset($data['lastLogin'])) { $user->setLastLogin($data['lastLogin']); }
 
-        if (isset($data['isVerified'])) { $user->setIsVerified($data['isVerified']); }
+        if (isset($data['isVerified'])) {
+
+             $user->setIsVerified($data['isVerified']);
+
+             if($data['isVerified']==true){
+
+
+                try {
+                    $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+                } catch (ResetPasswordExceptionInterface $e) {
+        
+                }
+        
+
+                $email = (new TemplatedEmail())
+                ->from(new Address('mailer@wevioo.com', 'Wevioo'))
+                ->to($user->getEmail())
+                ->subject("Configure your password Wevioo-Customer-Feedback")
+                ->htmlTemplate('emails/configurePassword.html.twig')
+                ->context([
+                    'resetToken' => $resetToken,
+                    'userFirstName'  => $user->getFirstName(),
+                    'userLastName'  => $user->getLastName()
+                ]);
+                
+    
+                $this->mailer->send($email);
+             }
+
+            }
+
 
         if (isset($data['password'])) { 
 
@@ -203,11 +239,21 @@ class UserService{
 
         if (isset($data['roles'])) { 
             //Logic to a assign multiple roles with the name passed
-            $roles = $user->getRoles();
+            //I need to created a roles table assign to it User ROLE
+            //and then take the string recived split it into roles
+            // and push them into the array of roles and then set it to user and flush
+            $roles = ["ROLE_USER"];
+
+            $roles_arr = explode(',', $data['roles']);
         
-            foreach($data['roles'] as $role){
-            array_push($roles,$role);
-            }
+            foreach ($roles_arr as $role) {
+                // Remove any empty elements
+                $role = trim($role);
+                if ($role != '') {
+                  // Add the remaining elements to the $roles array
+                  $roles[] = $role;
+                }
+              }
 
             $user->setRoles($roles); 
         }

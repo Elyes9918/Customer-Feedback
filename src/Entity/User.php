@@ -97,8 +97,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->projects = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->historiques = new ArrayCollection();
-
-        $this->token_id = md5(uniqid($this->email, true));
     }
 
     
