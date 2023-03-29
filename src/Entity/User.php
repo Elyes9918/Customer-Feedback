@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Trait\DateTrait;
+use App\Trait\TokenTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,6 +23,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use DateTrait;
+    use TokenTrait;
 
     //Status Constants
     const STATUS_NOT_ACTIVATED = 0;
@@ -84,9 +86,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $last_login = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $token_id = null;
 
     #[ORM\Column(type: 'boolean')]
     private $fireUpdate = true;
@@ -376,15 +375,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTokenId(): ?string
-    {
-        return $this->token_id;
-    }
 
-    public function setTokenId(?string $token_id): self
-    {
-        $this->token_id = $token_id;
-
-        return $this;
-    }
 }

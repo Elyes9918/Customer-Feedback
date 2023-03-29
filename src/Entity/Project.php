@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Trait\DateTrait;
 use App\Repository\ProjectRepository;
+use App\Trait\TokenTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -14,6 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Project
 {
     use DateTrait;
+    use TokenTrait;
+
+      //Status Constants
+      const STATUS_OPEN = 0;
+      const STATUS_ONHOLD = 1;
+      const STATUS_CLOSED = 2;
 
 
     #[ORM\Id]
@@ -36,8 +43,9 @@ class Project
     #[ORM\Column(nullable: true)]
     private ?int $status = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $file = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
 
     public function __construct()
     {
@@ -143,15 +151,16 @@ class Project
         return $this;
     }
 
-    public function getFile()
+    public function getDescription(): ?string
     {
-        return $this->file;
+        return $this->description;
     }
 
-    public function setFile($file): self
+    public function setDescription(?string $description): self
     {
-        $this->file = $file;
+        $this->description = $description;
 
         return $this;
     }
+
 }
