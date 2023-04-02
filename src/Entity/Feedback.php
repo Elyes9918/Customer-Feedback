@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Trait\DateTrait;
 use App\Repository\FeedbackRepository;
+use App\Trait\TokenTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -15,6 +16,23 @@ class Feedback
 {
 
     use DateTrait;
+    use TokenTrait;
+
+    //Status Constants
+    const STATUS_OPEN = 0;
+    const STATUS_ONHOLD = 1;
+    const STATUS_CLOSED = 2;
+
+    //Realised Constants
+    const REALSIED_NOTYET = 0;
+    const REALISED = 1;
+
+    //Priority Constants
+    const PRIORITY_LOW = 0;
+    const PRIORITY_MEDIUM = 1;
+    const PRIORITY_HIGH = 2;
+    const PRIORITY_VERYHIGH = 3;
+
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -51,6 +69,9 @@ class Feedback
     #[ORM\Column(nullable: true)]
     private ?int $rating = null;
 
+    #[ORM\OneToMany(mappedBy: 'image', targetEntity: Image::class)]
+    private Collection $images;
+
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $file = null;
 
@@ -58,6 +79,7 @@ class Feedback
     {
         $this->users = new ArrayCollection();
         $this->historiques = new ArrayCollection();
+        $this->images=new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +150,36 @@ class Feedback
             // set the owning side to null (unless already changed)
             if ($historique->getFeedback() === $this) {
                 $historique->setFeedback(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setFeedback($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getFeedback() === $this) {
+                $image->setFeedback(null);
             }
         }
 
@@ -229,4 +281,6 @@ class Feedback
 
         return $this;
     }
+
+   
 }

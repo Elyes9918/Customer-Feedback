@@ -6,7 +6,6 @@ use App\DataTransferObjects\ProjectDto;
 use App\Entity\Project;
 use App\Services\ProjectService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,6 +36,15 @@ class ProjectController extends AbstractController
        
         return $this->json($projectsDtos);
     }
+
+    #[Route('/projects/user/{id}', name: 'app_project_get_byIdUser', methods: "GET")]
+    public function getProjectsByIdUser(string $id): JsonResponse
+    {
+        $projectDtos = $this->projectService->getProjectsByIdPersonne($id);
+        
+        return $this->json($projectDtos);
+    }
+
 
     #[Route('/projects/{id}', name: 'app_project_get', methods: "GET")]
     public function getUserById(string $id): JsonResponse

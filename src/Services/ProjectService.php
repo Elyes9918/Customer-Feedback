@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DataTransferObjects\ProjectDto;
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ class ProjectService{
         private ManagerRegistry $doctrine,
         private ProjectRepository $projectRepository,
         private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository
     ){ 
 
     }
@@ -26,6 +28,16 @@ class ProjectService{
         $project->setTitle($data['title']);
         $project->setClient($data['client']);
         $project->setDescription($data['description']);
+
+        // I will get an array of user id I want to add these users to my project
+        
+        $usersId = $data['usersId'];
+        foreach ($usersId as $userId) {
+            $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
+            $project->addUser($user);
+          }
+
+
 
         $project->setStatus(1);
         $project->setTokenId(md5(uniqid($data['title'], true)));
@@ -66,6 +78,35 @@ class ProjectService{
 
     }
 
+    public function getProjectsByIdPersonne(string $id): array {
+        $projects = $this->projectRepository->getAllProjectsByIdUser($id);
+        $projectDtos =[];
+
+        foreach($projects as $project){
+            $users = [];
+
+            foreach($project->getUsers() as $user){
+                $users[] = $user->getTokenId();
+            }
+
+            $projectDto = new ProjectDto();
+            $projectDto->setId($project->getTokenId());
+            $projectDto->setTitle($project->getTitle());
+            $projectDto->setClient($project->getClient());
+            $projectDto->setStatus($project->getStatus());
+            $projectDto->setDescription($project->getDescription());
+            $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
+            $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
+            $projectDto->setUsersId($users);
+
+
+            $projectDtos[] = $projectDto;
+        }
+
+        return $projectDtos;
+
+    }
+
     public function getProjectById(string $id) : ProjectDto {
         $project = $this->projectRepository->findOneBy(['token_id'=>$id]);
 
@@ -74,7 +115,11 @@ class ProjectService{
         $users = [];
 
         foreach($project->getUsers() as $user){
-            $users[] = $user->getTokenId();
+            $users[] = [
+                'id' => $user->getTokenId(),
+                'name' => $user->getFirstName() . " " . $user->getLastName(),
+                'roles' => $user->getRoles(),
+              ];
         }
 
         $projectDto = new ProjectDto();
@@ -92,6 +137,8 @@ class ProjectService{
 
         
     }
+
+    
 
     public function updateProject(Request $request,string $id): void {
 

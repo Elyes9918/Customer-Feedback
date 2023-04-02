@@ -90,6 +90,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $fireUpdate = true;
 
+    #[ORM\OneToOne(inversedBy: 'user', targetEntity: Image::class, cascade: ['persist', 'remove'])]
+    private ?Image $image = null;
+
+
 
     public function __construct()
     {
@@ -376,4 +380,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
+
+    /**
+     * Get the value of image
+     */
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set the value of image
+     */
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 }

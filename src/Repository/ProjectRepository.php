@@ -21,6 +21,18 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
+    public function getAllProjectsByIdUser(string $id): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->join('p.users', 'u')
+            ->where('u.token_id = :id')
+            ->setParameter('id', $id);
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
     public function save(Project $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
