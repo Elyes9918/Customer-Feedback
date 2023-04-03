@@ -57,7 +57,11 @@ class ProjectService{
             $users = [];
 
             foreach($project->getUsers() as $user){
-                $users[] = $user->getTokenId();
+                $users[] = [
+                    'id' => $user->getTokenId(),
+                    'name' => $user->getFirstName() . " " . $user->getLastName(),
+                    'roles' => $user->getRoles(),
+                  ];
             }
 
             $projectDto = new ProjectDto();
@@ -86,7 +90,11 @@ class ProjectService{
             $users = [];
 
             foreach($project->getUsers() as $user){
-                $users[] = $user->getTokenId();
+                $users[] = [
+                    'id' => $user->getTokenId(),
+                    'name' => $user->getFirstName() . " " . $user->getLastName(),
+                    'roles' => $user->getRoles(),
+                  ];
             }
 
             $projectDto = new ProjectDto();
@@ -150,6 +158,22 @@ class ProjectService{
         if (isset($data['description'])) { $project->setDescription($data['description']);}
         if (isset($data['client'])) { $project->setClient($data['client']);}
         if (isset($data['status'])) { $project->setStatus($data['status']);}
+
+        if (isset($data['usersId'])){
+
+            $usersId = $data['usersId'];
+            
+            foreach($project->getUsers() as $user){
+                $project->removeUser($user);
+            }
+
+            foreach ($usersId as $userId) {
+                $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
+                $project->addUser($user);
+            }
+        }
+        
+
     
         $entityManger = $this->doctrine->getManager();
         $entityManger->flush();
