@@ -93,6 +93,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(inversedBy: 'user', targetEntity: Image::class, cascade: ['persist', 'remove'])]
     private ?Image $image = null;
 
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Project::class)]
+    private Collection $my_projects;
+
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Feedback::class)]
+    private Collection $my_feedbacks;
 
 
     public function __construct()
@@ -100,6 +105,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->projects = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->historiques = new ArrayCollection();
+        $this->my_projects = new ArrayCollection();
+        $this->my_feedbacks = new ArrayCollection();
     }
 
     
@@ -398,4 +405,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getMyProjects(): Collection
+    {
+        return $this->my_projects;
+    }
+
+    public function addMyProject(Project $myProject): self
+    {
+        if (!$this->my_projects->contains($myProject)) {
+            $this->my_projects->add($myProject);
+            $myProject->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMyProject(Project $myProject): self
+    {
+        if ($this->my_projects->removeElement($myProject)) {
+            // set the owning side to null (unless already changed)
+            if ($myProject->getCreator() === $this) {
+                $myProject->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getMyFeedbacks(): Collection
+    {
+        return $this->my_feedbacks;
+    }
+
+    public function addMyFeedback(Feedback $myFeedback): self
+    {
+        if (!$this->my_feedbacks->contains($myFeedback)) {
+            $this->my_feedbacks->add($myFeedback);
+            $myFeedback->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMyFeedback(Feedback $myFeedback): self
+    {
+        if ($this->my_feedbacks->removeElement($myFeedback)) {
+            // set the owning side to null (unless already changed)
+            if ($myFeedback->getCreator() === $this) {
+                $myFeedback->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

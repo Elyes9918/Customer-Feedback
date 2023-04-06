@@ -20,12 +20,9 @@ class Feedback
 
     //Status Constants
     const STATUS_OPEN = 0;
-    const STATUS_ONHOLD = 1;
-    const STATUS_CLOSED = 2;
-
-    //Realised Constants
-    const REALSIED_NOTYET = 0;
-    const REALISED = 1;
+    const STATUS_INPROGRESS = 1;
+    const STATUS_TOREVIEW =2;
+    const STATUS_COMPLETED = 2;
 
     //Priority Constants
     const PRIORITY_LOW = 0;
@@ -52,13 +49,10 @@ class Feedback
     private ?Project $project = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $sujet = null;
+    private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $status = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $realised = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $estimated_time = null;
@@ -74,6 +68,9 @@ class Feedback
 
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $file = null;
+
+    #[ORM\ManyToOne(inversedBy: 'my_feedbacks')]
+    private ?User $creator = null;
 
     public function __construct()
     {
@@ -198,14 +195,14 @@ class Feedback
         return $this;
     }
 
-    public function getSujet(): ?string
+    public function getTitle(): ?string
     {
-        return $this->sujet;
+        return $this->title;
     }
 
-    public function setSujet(?string $sujet): self
+    public function setTitle(?string $title): self
     {
-        $this->sujet = $sujet;
+        $this->title = $title;
 
         return $this;
     }
@@ -218,18 +215,6 @@ class Feedback
     public function setStatus(?int $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getRealised(): ?int
-    {
-        return $this->realised;
-    }
-
-    public function setRealised(?int $realised): self
-    {
-        $this->realised = $realised;
 
         return $this;
     }
@@ -278,6 +263,18 @@ class Feedback
     public function setFile($file): self
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }

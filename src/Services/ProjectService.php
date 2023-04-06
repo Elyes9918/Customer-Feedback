@@ -29,6 +29,10 @@ class ProjectService{
         $project->setClient($data['client']);
         $project->setDescription($data['description']);
 
+        $creatorId = $data['creatorId'];
+        $creator = $this->userRepository->findOneBy(['token_id' => $creatorId]);
+        $project->setCreator($creator);
+
         // I will get an array of user id I want to add these users to my project
         
         $usersId = $data['usersId'];
@@ -64,6 +68,12 @@ class ProjectService{
                   ];
             }
 
+            $creator=[
+                'id' => $project->getCreator()->getTokenId(),
+                'name'=>$project->getCreator()->getFirstName() . " " . $project->getCreator()->getLastName(),
+                'roles' =>$project->getCreator()->getRoles(),  
+            ];
+
             $projectDto = new ProjectDto();
             $projectDto->setId($project->getTokenId());
             $projectDto->setTitle($project->getTitle());
@@ -73,6 +83,7 @@ class ProjectService{
             $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
+            $projectDto->setCreator($creator);
 
 
             $projectDtos[] = $projectDto;
@@ -97,6 +108,12 @@ class ProjectService{
                   ];
             }
 
+            $creator=[
+                'id' => $project->getCreator()->getTokenId(),
+                'name'=>$project->getCreator()->getFirstName() . " " . $project->getCreator()->getLastName(),
+                'roles' =>$project->getCreator()->getRoles(),  
+            ];
+
             $projectDto = new ProjectDto();
             $projectDto->setId($project->getTokenId());
             $projectDto->setTitle($project->getTitle());
@@ -106,6 +123,7 @@ class ProjectService{
             $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
+            $projectDto->setCreator($creator);
 
 
             $projectDtos[] = $projectDto;
@@ -130,6 +148,12 @@ class ProjectService{
               ];
         }
 
+        $creator=[
+            'id' => $project->getCreator()->getTokenId(),
+            'name'=>$project->getCreator()->getFirstName() . " " . $project->getCreator()->getLastName(),
+            'roles' =>$project->getCreator()->getRoles(),  
+        ];
+
         $projectDto = new ProjectDto();
         $projectDto->setId($project->getTokenId());
         $projectDto->setTitle($project->getTitle());
@@ -139,7 +163,7 @@ class ProjectService{
         $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
         $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
         $projectDto->setUsersId($users);
-
+        $projectDto->setCreator($creator);
 
         return $projectDto;
 

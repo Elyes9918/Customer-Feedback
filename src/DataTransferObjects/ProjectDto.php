@@ -12,6 +12,7 @@ class ProjectDto {
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
     private array $usersId= [];
+    private array $creator = [];
 
     public function __construct(
         ) {}
@@ -156,6 +157,24 @@ class ProjectDto {
     public function setUsersId(array $usersId): self
     {
         $this->usersId = $usersId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of creator
+     */
+    public function getCreator(): array
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Set the value of creator
+     */
+    public function setCreator(array $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }

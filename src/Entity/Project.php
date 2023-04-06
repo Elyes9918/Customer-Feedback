@@ -46,6 +46,10 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\ManyToOne(inversedBy: 'my_projects')]
+    private ?User $creator = null;
+
+
 
     public function __construct()
     {
@@ -164,5 +168,18 @@ class Project
 
         return $this;
     }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
 
 }

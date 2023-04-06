@@ -5,17 +5,17 @@ namespace App\DataTransferObjects;
 class FeedbackDto {
 
     private ?string $id=null;
-    private ?string $sujet=null;
+    private ?string $title=null;
     private ?string $description=null;
     private ?string $project_id=null;
     private ?string $status=null;
-    private ?String $realised=null;
     private ?string $estimated_time=null;
     private ?string $priority=null;
     private ?string $rating=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
     private array $usersId= [];
+    private array $creator = [];
 
 
     /**
@@ -37,19 +37,19 @@ class FeedbackDto {
     }
 
     /**
-     * Get the value of sujet
+     * Get the value of title
      */
-    public function getSujet(): ?string
+    public function getTitle(): ?string
     {
-        return $this->sujet;
+        return $this->title;
     }
 
     /**
-     * Set the value of sujet
+     * Set the value of title
      */
-    public function setSujet(?string $sujet): self
+    public function setTitle(?string $title): self
     {
-        $this->sujet = $sujet;
+        $this->title = $title;
 
         return $this;
     }
@@ -108,23 +108,6 @@ class FeedbackDto {
         return $this;
     }
 
-    /**
-     * Get the value of realised
-     */
-    public function getRealised(): ?String
-    {
-        return $this->realised;
-    }
-
-    /**
-     * Set the value of realised
-     */
-    public function setRealised(?String $realised): self
-    {
-        $this->realised = $realised;
-
-        return $this;
-    }
 
     /**
      * Get the value of estimated_time
@@ -230,6 +213,24 @@ class FeedbackDto {
     public function setUsersId(array $usersId): self
     {
         $this->usersId = $usersId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of creator
+     */
+    public function getCreator(): array
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Set the value of creator
+     */
+    public function setCreator(array $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }

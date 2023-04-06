@@ -16,7 +16,7 @@ class ProjectController extends AbstractController
 
     public function __construct(private ProjectService $projectService)
     {  
-
+        
     }
 
     #[Route('/projects',name:'app_projects_create',methods:"POST")]
@@ -37,14 +37,6 @@ class ProjectController extends AbstractController
         return $this->json($projectsDtos);
     }
 
-    #[Route('/projects/user/{id}', name: 'app_project_get_byIdUser', methods: "GET")]
-    public function getProjectsByIdUser(string $id): JsonResponse
-    {
-        $projectDtos = $this->projectService->getProjectsByIdPersonne($id);
-        
-        return $this->json($projectDtos);
-    }
-
 
     #[Route('/projects/{id}', name: 'app_project_get', methods: "GET")]
     public function getUserById(string $id): JsonResponse
@@ -53,6 +45,15 @@ class ProjectController extends AbstractController
         $projectDto = $this->projectService->getProjectById($id);
         
         return $this->json($projectDto);
+    }
+
+    
+    #[Route('/projects/user/{id}', name: 'app_project_get_byIdUser', methods: "GET")]
+    public function getProjectsByIdUser(string $id): JsonResponse
+    {
+        $projectDtos = $this->projectService->getProjectsByIdPersonne($id);
+        
+        return $this->json($projectDtos);
     }
 
     #[Route('/projects/{id}', name: 'app_projects_patch', methods: "PATCH")]
