@@ -8,6 +8,7 @@ use App\Repository\FeedbackRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -141,11 +142,52 @@ class FeedbackService{
         $feedbackDto->setUsersId($users);
         $feedbackDto->setCreator($creator);
 
-
-
         return $feedbackDto;
+    }
 
-        
+    public function getFeedbackByIdProject(string $id): array {
+
+        $projectId= $this->projectRepository->findOneBy(['token_id'=>$id])->getId();
+
+        $feedbacks = $this->feedbackRepository->getAllFeedbacksByIdProject($projectId);
+        $feedbackDtos =[];
+
+        foreach($feedbacks as $feedback){
+            $users = [];
+
+            foreach($feedback->getUsers() as $user){
+                $users[] = [
+                    'id' => $user->getTokenId(),
+                    'name' => $user->getFirstName() . " " . $user->getLastName(),
+                    'roles' => $user->getRoles(),
+                  ];
+            }
+
+            $creator=[
+                'id' => $feedback->getCreator()->getTokenId(),
+                'name'=>$feedback->getCreator()->getFirstName() . " " . $feedback->getCreator()->getLastName(),
+                'roles' =>$feedback->getCreator()->getRoles(),  
+            ];
+
+            $feedbackDto = new FeedbackDto();
+            $feedbackDto->setId($feedback->getTokenId());
+            $feedbackDto->setTitle($feedback->getTitle());
+            $feedbackDto->setDescription($feedback->getDescription());
+            $feedbackDto->setProjectId($feedback->getProject()->getTokenId());
+            $feedbackDto->setStatus($feedback->getStatus());
+            $feedbackDto->setEstimatedTime($feedback->getEstimatedTime());
+            $feedbackDto->setPriority($feedback->getPriority());
+            $feedbackDto->setRating($feedback->getRating());
+            $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
+            $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
+            $feedbackDto->setUsersId($users);
+            $feedbackDto->setCreator($creator);
+
+            $feedbackDtos[] = $feedbackDto;
+        }
+
+        return $feedbackDtos;
+
     }
 
     public function getFeedbackByIdUser(string $id): array {
@@ -182,8 +224,6 @@ class FeedbackService{
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
             $feedbackDto->setCreator($creator);
-
-
 
             $feedbackDtos[] = $feedbackDto;
         }

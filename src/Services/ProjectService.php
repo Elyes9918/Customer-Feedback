@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DataTransferObjects\ProjectDto;
 use App\Entity\Project;
+use App\Repository\FeedbackRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +17,8 @@ class ProjectService{
         private ManagerRegistry $doctrine,
         private ProjectRepository $projectRepository,
         private EntityManagerInterface $entityManager,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private FeedbackRepository $feedbackRepository
     ){ 
 
     }
@@ -59,6 +61,8 @@ class ProjectService{
 
         foreach($projects as $project){
             $users = [];
+            $feedbacks = [];
+
 
             foreach($project->getUsers() as $user){
                 $users[] = [
@@ -68,11 +72,21 @@ class ProjectService{
                   ];
             }
 
+            
+            foreach($project->getFeedbacks() as $feedback){
+                $feedbacks[] = [
+                    'id' => $feedback->getTokenId(),
+                    'status' => $feedback->getStatus()
+                  ];
+            }
+
+            
             $creator=[
                 'id' => $project->getCreator()->getTokenId(),
                 'name'=>$project->getCreator()->getFirstName() . " " . $project->getCreator()->getLastName(),
                 'roles' =>$project->getCreator()->getRoles(),  
             ];
+
 
             $projectDto = new ProjectDto();
             $projectDto->setId($project->getTokenId());
@@ -84,6 +98,7 @@ class ProjectService{
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
             $projectDto->setCreator($creator);
+            $projectDto->setFeedbacks($feedbacks);
 
 
             $projectDtos[] = $projectDto;
@@ -99,12 +114,21 @@ class ProjectService{
 
         foreach($projects as $project){
             $users = [];
+            $feedbacks = [];
+
 
             foreach($project->getUsers() as $user){
                 $users[] = [
                     'id' => $user->getTokenId(),
                     'name' => $user->getFirstName() . " " . $user->getLastName(),
                     'roles' => $user->getRoles(),
+                  ];
+            }
+
+            foreach($project->getFeedbacks() as $feedback){
+                $feedbacks[] = [
+                    'id' => $feedback->getTokenId(),
+                    'status' => $feedback->getStatus()
                   ];
             }
 
@@ -124,6 +148,8 @@ class ProjectService{
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
             $projectDto->setCreator($creator);
+            $projectDto->setFeedbacks($feedbacks);
+
 
 
             $projectDtos[] = $projectDto;
@@ -139,12 +165,21 @@ class ProjectService{
         $projectDto = new ProjectDto();
 
         $users = [];
+        $feedbacks = [];
+
 
         foreach($project->getUsers() as $user){
             $users[] = [
                 'id' => $user->getTokenId(),
                 'name' => $user->getFirstName() . " " . $user->getLastName(),
                 'roles' => $user->getRoles(),
+              ];
+        }
+
+        foreach($project->getFeedbacks() as $feedback){
+            $feedbacks[] = [
+                'id' => $feedback->getTokenId(),
+                'status' => $feedback->getStatus()
               ];
         }
 
@@ -164,6 +199,8 @@ class ProjectService{
         $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
         $projectDto->setUsersId($users);
         $projectDto->setCreator($creator);
+        $projectDto->setFeedbacks($feedbacks);
+
 
         return $projectDto;
 

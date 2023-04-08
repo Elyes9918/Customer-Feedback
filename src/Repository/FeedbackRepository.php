@@ -34,6 +34,20 @@ class FeedbackRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function getAllFeedbacksByIdProject(string $projectId): array
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->where('f.project = :projectId') // replace "projectId" with your desired project id
+            ->setParameter('projectId', $projectId);
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+
+    
+
     public function save(Feedback $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

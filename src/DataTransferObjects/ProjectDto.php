@@ -12,6 +12,7 @@ class ProjectDto {
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
     private array $usersId= [];
+    private array $feedbacks= [];
     private array $creator = [];
 
     public function __construct(
@@ -157,6 +158,24 @@ class ProjectDto {
     public function setUsersId(array $usersId): self
     {
         $this->usersId = $usersId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of feedbacks
+     */
+    public function getFeedbacks(): array
+    {
+        return $this->feedbacks;
+    }
+
+    /**
+     * Set the value of feedbacks
+     */
+    public function setFeedbacks(array $feedbacks): self
+    {
+        $this->feedbacks = $feedbacks;
 
         return $this;
     }

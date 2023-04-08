@@ -53,6 +53,14 @@ class FeedbackController extends AbstractController
         return $this->json($feedbackDtos);
     }
 
+    #[Route('/feedbacks/project/{id}', name: 'app_feedback_get_byIdProject', methods: "GET")]
+    public function getFeedbacksByIdProject(string $id): JsonResponse
+    {
+        $feedbackDtos = $this->feedbackService->getFeedbackByIdProject($id);
+        
+        return $this->json($feedbackDtos);
+    }
+
     #[Route('/feedbacks/{id}', name: 'app_feedbacks_patch', methods: "PATCH")]
     public function updateFeedback(Request $request,string $id): JsonResponse
     {
