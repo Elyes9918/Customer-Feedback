@@ -42,8 +42,8 @@ class Feedback
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feedbacks')]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'feedback', targetEntity: Historique::class)]
-    private Collection $historiques;
+    #[ORM\OneToMany(mappedBy: 'feedback', targetEntity: Comment::class)]
+    private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'feedbacks')]
     private ?Project $project = null;
@@ -78,7 +78,7 @@ class Feedback
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->historiques = new ArrayCollection();
+        $this->comments = new ArrayCollection();
         $this->images=new ArrayCollection();
     }
 
@@ -127,29 +127,29 @@ class Feedback
     }
 
     /**
-     * @return Collection<int, Historique>
+     * @return Collection<int, Comment>
      */
-    public function getHistoriques(): Collection
+    public function getComments(): Collection
     {
-        return $this->historiques;
+        return $this->comments;
     }
 
-    public function addHistorique(Historique $historique): self
+    public function addComment(Comment $comment): self
     {
-        if (!$this->historiques->contains($historique)) {
-            $this->historiques->add($historique);
-            $historique->setFeedback($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setFeedback($this);
         }
 
         return $this;
     }
 
-    public function removeHistorique(Historique $historique): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->historiques->removeElement($historique)) {
+        if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($historique->getFeedback() === $this) {
-                $historique->setFeedback(null);
+            if ($comment->getFeedback() === $this) {
+                $comment->setFeedback(null);
             }
         }
 

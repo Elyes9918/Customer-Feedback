@@ -54,8 +54,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Feedback::class, inversedBy: 'users')]
     private Collection $feedbacks;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Historique::class)]
-    private Collection $historiques;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
+    private Collection $comments;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $first_name = null;
@@ -104,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->projects = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
-        $this->historiques = new ArrayCollection();
+        $this->comments = new ArrayCollection();
         $this->my_projects = new ArrayCollection();
         $this->my_feedbacks = new ArrayCollection();
     }
@@ -237,29 +237,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Historique>
+     * @return Collection<int, Comment>
      */
-    public function getHistoriques(): Collection
+    public function getComment(): Collection
     {
-        return $this->historiques;
+        return $this->comments;
     }
 
-    public function addHistorique(Historique $historique): self
+    public function addComment(Comment $comment): self
     {
-        if (!$this->historiques->contains($historique)) {
-            $this->historiques->add($historique);
-            $historique->setUser($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeHistorique(Historique $historique): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->historiques->removeElement($historique)) {
+        if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($historique->getUser() === $this) {
-                $historique->setUser(null);
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 

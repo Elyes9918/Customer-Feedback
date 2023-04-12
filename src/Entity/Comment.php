@@ -3,14 +3,15 @@
 namespace App\Entity;
 
 use App\Trait\DateTrait;
-use App\Repository\HistoriqueRepository;
+use App\Trait\TokenTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Entity(repositoryClass: HistoriqueRepository::class)]
-class Historique
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
 {
+    use TokenTrait;
     use DateTrait;
 
     #[ORM\Id]
@@ -21,10 +22,10 @@ class Historique
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'historiques')]
+    #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'historiques')]
+    #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Feedback $feedback = null;
 
     #[ORM\Column(type: 'text')]

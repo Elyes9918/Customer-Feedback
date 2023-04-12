@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Historique;
+use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Historique>
+ * @extends ServiceEntityRepository<Comment>
  *
- * @method Historique|null find($id, $lockMode = null, $lockVersion = null)
- * @method Historique|null findOneBy(array $criteria, array $orderBy = null)
- * @method Historique[]    findAll()
- * @method Historique[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Comment|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Comment[]    findAll()
+ * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HistoriqueRepository extends ServiceEntityRepository
+class CommentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Historique::class);
+        parent::__construct($registry, Comment::class);
     }
 
-    public function save(Historique $entity, bool $flush = false): void
+    public function save(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class HistoriqueRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Historique $entity, bool $flush = false): void
+    public function remove(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class HistoriqueRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Historique[] Returns an array of Historique objects
+//     * @return Comment[] Returns an array of Comment objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class HistoriqueRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Historique
+//    public function findOneBySomeField($value): ?Comment
 //    {
 //        return $this->createQueryBuilder('h')
 //            ->andWhere('h.exampleField = :val')
