@@ -2,6 +2,8 @@
 
 namespace App\DataTransferObjects;
 
+use phpDocumentor\Reflection\Types\Integer;
+
 class FeedbackDto {
 
     private ?string $id=null;
@@ -14,8 +16,11 @@ class FeedbackDto {
     private ?string $rating=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
-    private array $usersId= [];
-    private array $creator = [];
+    private ?String $progress=null;
+    private ?array $usersId= [];
+    private ?array $creator = [];
+    private ?array $project = [];
+
 
 
     /**
@@ -231,6 +236,42 @@ class FeedbackDto {
     public function setCreator(array $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of project
+     */
+    public function getProject(): array
+    {
+        return $this->project;
+    }
+
+    /**
+     * Set the value of project
+     */
+    public function setProject(array $project): self
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of progress
+     */
+    public function getProgress(): ?String
+    {
+        return $this->progress;
+    }
+
+    /**
+     * Set the value of progress
+     */
+    public function setProgress(?String $progress): self
+    {
+        $this->progress = $progress;
 
         return $this;
     }

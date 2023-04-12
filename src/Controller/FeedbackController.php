@@ -69,10 +69,9 @@ class FeedbackController extends AbstractController
             return new JsonResponse("id is incorrect", 200, [], true);
         }
         
-
         $this->feedbackService->updateFeedback($request,$id);
 
-        return new JsonResponse(['meesage' => 'Feedback updated succesfully'], 200);
+        return new JsonResponse(['meesage' => 'Feedback updated succesfully'], 201);
     }
 
     #[Route('/feedbacks/{id}', name: 'app_feedbacks_delete', methods:"DELETE")]

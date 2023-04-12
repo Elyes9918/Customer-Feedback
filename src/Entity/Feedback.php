@@ -72,6 +72,9 @@ class Feedback
     #[ORM\ManyToOne(inversedBy: 'my_feedbacks')]
     private ?User $creator = null;
 
+    #[ORM\Column]
+    private ?int $progress = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -275,6 +278,18 @@ class Feedback
     public function setCreator(?User $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getProgress(): ?int
+    {
+        return $this->progress;
+    }
+
+    public function setProgress(int $progress): self
+    {
+        $this->progress = $progress;
 
         return $this;
     }

@@ -41,21 +41,22 @@ class FeedbackService{
         $creator = $this->userRepository->findOneBy(['token_id' => $creatorId]);
         $feedback->setCreator($creator);
 
-        $usersId = $data['usersId'];
-        foreach ($usersId as $userId) {
-            $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
-            $feedback->addUser($user);
-          }
+        if(isset ($data['usersId'])){
+            $usersId = $data['usersId'];
+            foreach ($usersId as $userId) {
+                $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
+                $feedback->addUser($user);
+              }
+        }
+       
 
         $feedback->setPriority($data['priority']);
-        $feedback->setStatus(Feedback::STATUS_OPEN);
+        $feedback->setStatus($data['status']);
         $feedback->setEstimatedTime(0);
         $feedback->setRating(0);
-
+        $feedback->setProgress(0);
         
-
         $feedback->setTokenId(md5(uniqid($data['title'], true)));
-
 
         $this->entityManager->persist($feedback);
         $this->entityManager->flush();
@@ -93,6 +94,7 @@ class FeedbackService{
             $feedbackDto->setEstimatedTime($feedback->getEstimatedTime());
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
+            $feedbackDto->setProgress($feedback->getProgress());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
@@ -128,19 +130,26 @@ class FeedbackService{
             'roles' =>$feedback->getCreator()->getRoles(),  
         ];
 
+        $project=[
+            'id'=> $feedback->getProject()->getTokenId(),
+            "name"=>$feedback->getProject()->getTitle(),
+            "client"=>$feedback->getProject()->getClient()
+        ];
+
         $feedbackDto = new FeedbackDto();
         $feedbackDto->setId($feedback->getTokenId());
         $feedbackDto->setTitle($feedback->getTitle());
         $feedbackDto->setDescription($feedback->getDescription());
-        $feedbackDto->setProjectId($feedback->getProject()->getTokenId());
         $feedbackDto->setStatus($feedback->getStatus());
         $feedbackDto->setEstimatedTime($feedback->getEstimatedTime());
         $feedbackDto->setPriority($feedback->getPriority());
         $feedbackDto->setRating($feedback->getRating());
+        $feedbackDto->setProgress($feedback->getProgress());
         $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
         $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
         $feedbackDto->setUsersId($users);
         $feedbackDto->setCreator($creator);
+        $feedbackDto->setProject($project);
 
         return $feedbackDto;
     }
@@ -178,6 +187,7 @@ class FeedbackService{
             $feedbackDto->setEstimatedTime($feedback->getEstimatedTime());
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
+            $feedbackDto->setProgress($feedback->getProgress());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
@@ -220,6 +230,7 @@ class FeedbackService{
             $feedbackDto->setEstimatedTime($feedback->getEstimatedTime());
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
+            $feedbackDto->setProgress($feedback->getProgress());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
@@ -248,8 +259,9 @@ class FeedbackService{
 
         if (isset($data['status'])) { $feedback->setStatus($data['status']);}
         if (isset($data['priority'])) { $feedback->setPriority($data['priority']);}
-        if (isset($data['estimated_time'])) { $feedback->setEstimatedTime($data['estimated_time']);}
+        if (isset($data['estimatedTime'])) { $feedback->setEstimatedTime($data['estimatedTime']);}
         if (isset($data['rating'])) { $feedback->setRating($data['rating']);}
+        if(isset($data['progress'])){$feedback->setProgress($data['progress']);}
 
         if (isset($data['usersId'])){
 
@@ -267,8 +279,6 @@ class FeedbackService{
     
         $entityManger = $this->doctrine->getManager();
         $entityManger->flush();
-
-
     }
 
     public function deleteFeedback(string $id): void {
