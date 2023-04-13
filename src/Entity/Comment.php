@@ -19,8 +19,8 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?User $user = null;
@@ -39,12 +39,12 @@ class Comment
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): ?int
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(int $type): self
     {
         $this->type = $type;
 

@@ -21,6 +21,17 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public function getAllCommentsByIdFeedback(string $feedbackId): array
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->where('f.feedback = :feedbackId') // replace "projectId" with your desired project id
+            ->setParameter('feedbackId', $feedbackId);
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
     public function save(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

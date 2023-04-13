@@ -42,11 +42,11 @@ class FeedbackService{
         $feedback->setCreator($creator);
 
         if(isset ($data['usersId'])){
-            $usersId = $data['usersId'];
-            foreach ($usersId as $userId) {
-                $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
-                $feedback->addUser($user);
-              }
+             $usersId = $data['usersId'];
+        foreach ($usersId as $userId) {
+            $user =  $this->userRepository->findOneBy(['token_id' => $userId]);
+            $feedback->addUser($user);
+          }
         }
        
 
@@ -286,10 +286,10 @@ class FeedbackService{
         $feedback =$this->feedbackRepository->findOneBy(['token_id' => $id]);
         $entityManger =$this->doctrine->getManager();
 
-        $historiques = $feedback->getHistoriques();
+        $comments = $feedback->getComments();
 
-        foreach($historiques as $historique){
-            $entityManger->remove($historique);
+        foreach($comments as $comment){
+            $entityManger->remove($comment);
         }
 
         $entityManger->remove($feedback);
