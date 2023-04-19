@@ -63,7 +63,7 @@ class Feedback
     #[ORM\Column(nullable: true)]
     private ?int $rating = null;
 
-    #[ORM\OneToMany(mappedBy: 'image', targetEntity: Image::class)]
+    #[ORM\OneToMany(mappedBy: 'feedback', targetEntity: Image::class)]
     private Collection $images;
 
     #[ORM\Column(type: Types::BLOB, nullable: true)]
@@ -157,7 +157,7 @@ class Feedback
     }
 
     /**
-     * @return Collection<int, Images>
+     * @return Collection<int, Image>
      */
     public function getImages(): Collection
     {

@@ -4,6 +4,7 @@ namespace App\EventListennerJWT;
 
 // src/App/EventListener/JWTCreatedListener.php
 
+use App\Repository\RefreshTokenRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,6 +14,7 @@ class JWTCreatedListener
 {
 
     public function __construct(private UserRepository $userRepository,private ManagerRegistry $doctrine,
+    private RefreshTokenRepository $refreshTokenRepository,
     )
     {
     }
@@ -34,6 +36,17 @@ class JWTCreatedListener
         $header['cty'] = 'JWT';
 
         $event->setHeader($header);
+
+        // this deletes the previous refresh tokens each time a user login in 
+        $refreshTokens =$this->refreshTokenRepository->findRtsWhereUsername($user->getEmail());
+        $entityManger =$this->doctrine->getManager();
+
+        foreach($refreshTokens as $rt){
+            $entityManger->remove($rt);
+        }
+        $entityManger->flush();
+
+        
 
         $user->setLastLogin(new DateTime());
 
