@@ -33,6 +33,9 @@ class Image
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageExtension = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $creatorId = null;
+
 
     public function setImageName(?string $imageName): void
     {
@@ -88,6 +91,18 @@ class Image
     public function setImageExtension(?string $imageExtension): self
     {
         $this->imageExtension = $imageExtension;
+
+        return $this;
+    }
+
+    public function getCreatorId(): ?string
+    {
+        return $this->creatorId;
+    }
+
+    public function setCreatorId(string $creatorId): self
+    {
+        $this->creatorId = $creatorId;
 
         return $this;
     }

@@ -10,6 +10,7 @@ class ImageDto {
     private ?string $imageUrl=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
+    private ?String $creatorId=null;
 
     
 
@@ -118,6 +119,24 @@ class ImageDto {
     public function setImageExtension(?string $imageExtension): self
     {
         $this->imageExtension = $imageExtension;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of creatorId
+     */
+    public function getCreatorId(): ?String
+    {
+        return $this->creatorId;
+    }
+
+    /**
+     * Set the value of creatorId
+     */
+    public function setCreatorId(?String $creatorId): self
+    {
+        $this->creatorId = $creatorId;
 
         return $this;
     }

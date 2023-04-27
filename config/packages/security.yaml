@@ -54,7 +54,7 @@ security:
     access_control:
         #- { path: ^/api/products, roles: ROLE_PRODUCT }
         #- { path: ^/api/categories, roles: ROLE_CATEGORY }
-        #- { path: ^/api/v1/images/static/, roles: PUBLIC_ACCESS }
+        #- { path: ^/api/v1/files/download/, roles: PUBLIC_ACCESS }
         - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/users, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
         - { path: ^/api/v1/projects, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}

@@ -49,6 +49,9 @@ class Project
     #[ORM\ManyToOne(inversedBy: 'my_projects')]
     private ?User $creator = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $repo = null;
+
 
 
     public function __construct()
@@ -177,6 +180,18 @@ class Project
     public function setCreator(?User $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getRepo(): ?string
+    {
+        return $this->repo;
+    }
+
+    public function setRepo(?string $repo): self
+    {
+        $this->repo = $repo;
 
         return $this;
     }

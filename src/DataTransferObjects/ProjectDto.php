@@ -9,6 +9,7 @@ class ProjectDto {
     private ?string $client=null;
     private ?string $status=null;
     private ?string $description=null;
+    private ?string $repo=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
     private array $usersId= [];
@@ -194,6 +195,24 @@ class ProjectDto {
     public function setCreator(array $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of repo
+     */
+    public function getRepo(): ?string
+    {
+        return $this->repo;
+    }
+
+    /**
+     * Set the value of repo
+     */
+    public function setRepo(?string $repo): self
+    {
+        $this->repo = $repo;
 
         return $this;
     }

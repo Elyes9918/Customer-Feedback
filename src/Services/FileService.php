@@ -3,26 +3,24 @@
 namespace App\Services;
 
 use App\Repository\FeedbackRepository;
-use App\Repository\ImageRepository;
+use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 
-class ImageService
+class FileService
 {
 
     public function __construct(
         private ManagerRegistry $doctrine,
         private EntityManagerInterface $entityManager,
         private FeedbackRepository $feedbackRepository,
-        private ImageRepository $imageRepository,
-        private Packages $storage)
-    { 
+        private FileRepository $fileRepository,
+        private Packages $storage,
+        private LoggerInterface $logger
+    ){ 
     }
 
 
-    
-
-
 }
-

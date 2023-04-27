@@ -56,6 +56,7 @@ class ImageController extends AbstractController
             $imageDB = new Image();
             $imageDB->setImageName($image->getClientOriginalName());
             $imageDB->setImageExtension($extension);
+            $imageDB->setCreatorId($request->request->get('creatorId'));
 
             // $filePath = $image->getRealPath();
             // $imageSize = filesize($filePath);
@@ -99,6 +100,7 @@ class ImageController extends AbstractController
                                     $image->getTokenId().".".$image->getImageExtension());
             $imageDto->setCreatedAt($image->getCreatedAt()->format('Y-m-d H:i:s'));
             $imageDto->setModifiedAt($image->getModifiedAt()->format('Y-m-d H:i:s'));
+            $imageDto->setCreatorId($image->getCreatorId());
 
             $imageDtos[] = $imageDto;
         }

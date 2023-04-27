@@ -30,6 +30,7 @@ class ProjectService{
         $project->setTitle($data['title']);
         $project->setClient($data['client']);
         $project->setDescription($data['description']);
+        $project->setRepo($data['repo']);
 
         $creatorId = $data['creatorId'];
         $creator = $this->userRepository->findOneBy(['token_id' => $creatorId]);
@@ -94,6 +95,7 @@ class ProjectService{
             $projectDto->setClient($project->getClient());
             $projectDto->setStatus($project->getStatus());
             $projectDto->setDescription($project->getDescription());
+            $projectDto->setRepo($project->getRepo());
             $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
@@ -144,6 +146,7 @@ class ProjectService{
             $projectDto->setClient($project->getClient());
             $projectDto->setStatus($project->getStatus());
             $projectDto->setDescription($project->getDescription());
+            $projectDto->setRepo($project->getRepo());
             $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
             $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
             $projectDto->setUsersId($users);
@@ -195,6 +198,7 @@ class ProjectService{
         $projectDto->setClient($project->getClient());
         $projectDto->setStatus($project->getStatus());
         $projectDto->setDescription($project->getDescription());
+        $projectDto->setRepo($project->getRepo());
         $projectDto->setCreatedAt($project->getCreatedAt()->format('Y-m-d H:i:s'));
         $projectDto->setModifiedAt($project->getModifiedAt()->format('Y-m-d H:i:s'));
         $projectDto->setUsersId($users);
@@ -219,6 +223,8 @@ class ProjectService{
         if (isset($data['description'])) { $project->setDescription($data['description']);}
         if (isset($data['client'])) { $project->setClient($data['client']);}
         if (isset($data['status'])) { $project->setStatus($data['status']);}
+        if (isset($data['repo'])) { $project->setRepo($data['repo']);}
+
 
         if (isset($data['usersId'])){
 

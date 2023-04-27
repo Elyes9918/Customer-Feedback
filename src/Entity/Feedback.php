@@ -22,7 +22,7 @@ class Feedback
     const STATUS_OPEN = 0;
     const STATUS_INPROGRESS = 1;
     const STATUS_TOREVIEW =2;
-    const STATUS_COMPLETED = 2;
+    const STATUS_COMPLETED = 3;
 
     //Priority Constants
     const PRIORITY_LOW = 0;
@@ -75,11 +75,15 @@ class Feedback
     #[ORM\Column]
     private ?int $progress = null;
 
+    #[ORM\OneToMany(mappedBy: 'feedback', targetEntity: File::class)]
+    private Collection $files;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->images=new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -290,6 +294,36 @@ class Feedback
     public function setProgress(int $progress): self
     {
         $this->progress = $progress;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): self
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setFeedback($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): self
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getFeedback() === $this) {
+                $file->setFeedback(null);
+            }
+        }
 
         return $this;
     }
