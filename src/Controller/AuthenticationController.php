@@ -65,6 +65,7 @@ class AuthenticationController extends AbstractController {
         $user->setCompany($data['company']);
         $user->setCountry($data['country']);
         $user->setRoles([]);
+        $user->setNotificationIsOn(1);
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setStatus(USER::STATUS_NOT_ACTIVATED);
         $user->setIsVerified(0);

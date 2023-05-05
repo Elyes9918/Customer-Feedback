@@ -95,6 +95,7 @@ class FeedbackService{
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
             $feedbackDto->setProgress($feedback->getProgress());
+            $feedbackDto->setRepo($feedback->getProject()->getRepo());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
@@ -145,6 +146,7 @@ class FeedbackService{
         $feedbackDto->setPriority($feedback->getPriority());
         $feedbackDto->setRating($feedback->getRating());
         $feedbackDto->setProgress($feedback->getProgress());
+        $feedbackDto->setRepo($feedback->getProject()->getRepo());
         $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
         $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
         $feedbackDto->setUsersId($users);
@@ -188,6 +190,7 @@ class FeedbackService{
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
             $feedbackDto->setProgress($feedback->getProgress());
+            $feedbackDto->setRepo($feedback->getProject()->getRepo());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);
@@ -231,6 +234,7 @@ class FeedbackService{
             $feedbackDto->setPriority($feedback->getPriority());
             $feedbackDto->setRating($feedback->getRating());
             $feedbackDto->setProgress($feedback->getProgress());
+            $feedbackDto->setRepo($feedback->getProject()->getRepo());
             $feedbackDto->setCreatedAt($feedback->getCreatedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setModifiedAt($feedback->getModifiedAt()->format('Y-m-d H:i:s'));
             $feedbackDto->setUsersId($users);

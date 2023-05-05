@@ -14,6 +14,7 @@ class FeedbackDto {
     private ?string $estimated_time=null;
     private ?string $priority=null;
     private ?string $rating=null;
+    private ?string $repo=null;
     private ?String $createdAt=null;
     private ?String $modifiedAt=null;
     private ?String $progress=null;
@@ -272,6 +273,24 @@ class FeedbackDto {
     public function setProgress(?String $progress): self
     {
         $this->progress = $progress;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of repo
+     */
+    public function getRepo(): ?string
+    {
+        return $this->repo;
+    }
+
+    /**
+     * Set the value of repo
+     */
+    public function setRepo(?string $repo): self
+    {
+        $this->repo = $repo;
 
         return $this;
     }

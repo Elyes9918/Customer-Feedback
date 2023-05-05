@@ -25,22 +25,24 @@ class NotificationService{
 
     public function createNotification(Request $request):void {
 
-        $notification = new Notification();
         $data = json_decode($request->getContent(), true);
 
-        $notification->setDescription($data['description']);
-        $notification->setIsRead(0);
-        $notification->setType($data['type']);
-
-
-        $userId = $data['userId'];
-        $notification->setUser($this->userRepository->findOneBy(['token_id' => $userId]));
-    
-        $notification->setTokenId(md5(uniqid($data['description'], true)));
-
-
-        $this->entityManager->persist($notification);
+        $usersId = $data['usersId'];
+        foreach ($usersId as $userId) {
+            $user = $this->userRepository->findOneBy(['token_id' => $userId]);
+            if($user->getNotificationIsOn()==1){
+                $notification = new Notification();
+                $notification->setDescription($data['description']);
+                $notification->setIsRead(0);
+                $notification->setType($data['type']);
+                $notification->setTokenId(md5(uniqid($data['description'], true)));
+                $notification->setUser($user);
+                $this->entityManager->persist($notification);
+            }
+        }
+            
         $this->entityManager->flush();
+
 
     }
 

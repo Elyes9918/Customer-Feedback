@@ -76,6 +76,7 @@ class UserService{
     }
 
 
+    
     public function getUserById(string $id) : UserDto {
 
         $user = $this->userRepository->findOneBy(['token_id' => $id]);
@@ -85,11 +86,8 @@ class UserService{
         $feedbacks = [];
 
         foreach($user->getProjects() as $project){
-            // $projects[] = ['id' => $project->getId() ]; //this is an object 
             $projects[] = $project->getId();
         }
-    
-    
 
         foreach($user->getFeedbacks() as $feedback){
             $feedbacks[] = $feedback->getId() ;
@@ -108,6 +106,7 @@ class UserService{
         $userDto->setCompany($user->getCompany());
         $userDto->setIsVerified($user->isVerified());
         $userDto->setCountry($user->getCountry());
+        $userDto->setNotificationIsOn($user->getNotificationIsOn());
         $userDto->setLastLogin($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null);
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
@@ -125,7 +124,6 @@ class UserService{
         $feedbacks = [];
 
         foreach($user->getProjects() as $project){
-            // $projects[] = ['id' => $project->getId() ]; //this is an object 
             $projects[] = $project->getId();
         }
 
@@ -145,6 +143,7 @@ class UserService{
         $userDto->setPhoneNumber($user->getPhoneNumber());
         $userDto->setCompany($user->getCompany());
         $userDto->setCountry($user->getCountry());
+        $userDto->setNotificationIsOn($user->getNotificationIsOn());
         $userDto->setLastLogin($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null);
         $userDto->setProjectsId($projects);
         $userDto->setFeedbacksId($feedbacks);
@@ -179,6 +178,8 @@ class UserService{
         if (isset($data['company'])) { $user->setCompany($data['company']); }
 
         if (isset($data['country'])) { $user->setCountry($data['country']); }
+
+        if (isset($data['notificationIsOn'])) { $user->setNotificationIsOn($data['notificationIsOn']); }
 
         if (isset($data['lastLogin'])) { $user->setLastLogin($data['lastLogin']); }
 

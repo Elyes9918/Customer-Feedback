@@ -30,7 +30,7 @@ class ImageController extends AbstractController
     }
 
     #[Route('/images',name:'app_images_upload',methods:"POST")]
-    public function createFeedback(Request $request):JsonResponse{
+    public function createImage(Request $request):JsonResponse{
 
         $images = $request->files->get('images');
 

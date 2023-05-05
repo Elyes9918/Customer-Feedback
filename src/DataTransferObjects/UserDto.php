@@ -19,6 +19,7 @@ class UserDto {
     private ?string $country=null;
     private ?string $lastLogin=null;
     private ?bool $isVerified=null;
+    private ?string $notificationIsOn=null;
     private array $projectsId= [];
     private array $feedbacksId= [];
     private array $roles= [];
@@ -332,6 +333,24 @@ class UserDto {
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of notificationIsOn
+     */
+    public function getNotificationIsOn(): ?string
+    {
+        return $this->notificationIsOn;
+    }
+
+    /**
+     * Set the value of notificationIsOn
+     */
+    public function setNotificationIsOn(?string $notificationIsOn): self
+    {
+        $this->notificationIsOn = $notificationIsOn;
 
         return $this;
     }
