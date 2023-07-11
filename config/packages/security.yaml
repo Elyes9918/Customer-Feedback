@@ -59,6 +59,7 @@ security:
         - { path: ^/api/v1/users, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
         - { path: ^/api/v1/projects, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
         - { path: ^/api/v1/feedbacks, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
+        - { path: ^/api/v1/dashboard, roles: [ROLE_CLIENT,ROLE_ADMIN,ROLE_GESTIONNAIRE,ROLE_MEMBER,ROLE_USER]}
         - { path: ^/api/v1,  roles:  [IS_AUTHENTICATED_FULLY]}
         - { path: ^/api, roles: PUBLIC_ACCESS }
      

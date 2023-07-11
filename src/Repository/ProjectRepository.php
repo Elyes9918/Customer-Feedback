@@ -33,6 +33,65 @@ class ProjectRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function getProjectsCount(): int
+    {
+        $qb = $this->createQueryBuilder('p')
+        ->select('COUNT(p)');
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    
+    public function getCompletedProjectsCount(): int
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->where('p.status = :status')
+            ->setParameter('status', 2);
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getProjectStatus(): array
+    {
+
+        $qb0 = $this->createQueryBuilder('p')
+        ->select('COUNT(p)')
+        ->where('p.status = 0');
+        $query0 = $qb0->getQuery();
+
+        $qb1 = $this->createQueryBuilder('p')
+        ->select('COUNT(p)')
+        ->where('p.status = 1');
+        $query1 = $qb1->getQuery();
+
+        $qb2 = $this->createQueryBuilder('p')
+        ->select('COUNT(p)')
+        ->where('p.status = 2');
+        $query2 = $qb2->getQuery();
+
+
+        $openProjectsCount = $query0->getSingleScalarResult();
+        $waitingProjectsCount = $query1->getSingleScalarResult();
+        $closedProjectsCount = $query2->getSingleScalarResult();
+
+        $projectsStatus = [
+            'openProjects' => $openProjectsCount,
+            'waitingProjects' => $waitingProjectsCount,
+            'closedProjects' => $closedProjectsCount,
+        ];
+
+        return $projectsStatus;
+
+    }
+
+
+
+
     public function save(Project $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -50,6 +109,8 @@ class ProjectRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+
 
 //    /**
 //     * @return Project[] Returns an array of Project objects

@@ -45,8 +45,43 @@ class FeedbackRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function getTotalfeedbacksCount(): int
+    {
 
+        $qb = $this->createQueryBuilder('f')
+        ->select('COUNT(f)');
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getAverageFeedbacksCountPerProject(): float
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->select('COUNT(f)')
+            ->groupBy('f.project');
     
+        $query = $qb->getQuery();
+        $results = $query->getScalarResult();
+    
+        $feedbacksCount = 0;
+        $projectsCount = count($results);
+    
+        foreach ($results as $result) {
+            $feedbacksCount += $result[1];
+        }
+    
+        if ($projectsCount > 0) {
+            $averageFeedbacksCount = $feedbacksCount / $projectsCount;
+            $formattedAverage = number_format($averageFeedbacksCount, 2);
+            return (float) $formattedAverage;
+        }
+    
+        return 0;
+    }
+    
+
 
     public function save(Feedback $entity, bool $flush = false): void
     {

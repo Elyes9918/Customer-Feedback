@@ -24,6 +24,84 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function getUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+        ->select('COUNT(u)');
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getValidatedUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.isVerified = :isVerified')
+            ->setParameter('isVerified', 1);
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getAdminUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_ADMIN"%');
+    
+        $query = $qb->getQuery();
+    
+        return $query->getSingleScalarResult();
+    }
+
+    public function getGestionnaireUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_GESTIONNAIRE"%');
+    
+        $query = $qb->getQuery();
+    
+        return $query->getSingleScalarResult();
+    }
+    
+
+
+    public function getMemberUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_MEMBER"%');
+    
+        $query = $qb->getQuery();
+    
+        return $query->getSingleScalarResult();
+    }
+    
+
+
+    public function getClientUsersCount(): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_CLIENT"%');
+    
+        $query = $qb->getQuery();
+    
+        return $query->getSingleScalarResult();
+    }
+    
+
+    
+
+
     public function save(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
