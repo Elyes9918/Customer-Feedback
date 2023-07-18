@@ -16,8 +16,10 @@ class DashboardDto {
     private ?string $averageTicketsPerProject = null;
     private ?string $tickets = null;
     private array   $projectsStatus=[];
+    private array   $feedbacksStatus=[];
+    private array   $companies=[];
 
-    
+
     /**
      * Get the value of users
      */
@@ -214,6 +216,42 @@ class DashboardDto {
     public function setProjectsStatus(array $projectsStatus): self
     {
         $this->projectsStatus = $projectsStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of companies
+     */
+    public function getCompanies(): array
+    {
+        return $this->companies;
+    }
+
+    /**
+     * Set the value of companies
+     */
+    public function setCompanies(array $companies): self
+    {
+        $this->companies = $companies;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of feedbacksStatus
+     */
+    public function getFeedbacksStatus(): array
+    {
+        return $this->feedbacksStatus;
+    }
+
+    /**
+     * Set the value of feedbacksStatus
+     */
+    public function setFeedbacksStatus(array $feedbacksStatus): self
+    {
+        $this->feedbacksStatus = $feedbacksStatus;
 
         return $this;
     }

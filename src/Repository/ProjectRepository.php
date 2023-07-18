@@ -75,9 +75,9 @@ class ProjectRepository extends ServiceEntityRepository
         $query2 = $qb2->getQuery();
 
 
-        $openProjectsCount = $query0->getSingleScalarResult();
-        $waitingProjectsCount = $query1->getSingleScalarResult();
-        $closedProjectsCount = $query2->getSingleScalarResult();
+        $openProjectsCount = strval($query0->getSingleScalarResult());
+        $waitingProjectsCount = strval($query1->getSingleScalarResult());
+        $closedProjectsCount = strval($query2->getSingleScalarResult());
 
         $projectsStatus = [
             'openProjects' => $openProjectsCount,
@@ -88,6 +88,44 @@ class ProjectRepository extends ServiceEntityRepository
         return $projectsStatus;
 
     }
+
+    public function getOrderedCompaniesWithTheMostProjects(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+        ->select('p.client AS company_name, COUNT(p) AS project_count')
+        ->groupBy('p.client')
+        ->orderBy('project_count', 'DESC');
+
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+
+        $orderedCompanies = [];
+        foreach ($results as $result) {
+            $companyName = $result['company_name'];
+            $projectCount = $result['project_count'];
+            $orderedCompanies[$companyName] = $projectCount;
+        }
+
+        return $orderedCompanies;    
+    }
+
+     // $qb = $this->createQueryBuilder('p');
+        // $qb->select('p.client, COUNT(p) AS count');
+        // $qb->groupBy('p.client');
+        // $query = $qb->getQuery();
+
+        // $array = [];
+        // $results = $query->getResult();
+        // foreach ($results as $row) {
+        //     $company = $row['client'];
+        //     $count = $row['count'];
+
+        //     $array[$company] = $count;
+        // }
+
+        // krsort($array);
+
+        // return array_keys($array, true);
 
 
 

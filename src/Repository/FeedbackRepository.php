@@ -80,6 +80,48 @@ class FeedbackRepository extends ServiceEntityRepository
     
         return 0;
     }
+
+    public function getFeedbacksStatus(): array
+    {
+
+        $qb0 = $this->createQueryBuilder('f')
+        ->select('COUNT(f)')
+        ->where('f.status = 0');
+        $query0 = $qb0->getQuery();
+
+        $qb1 = $this->createQueryBuilder('f')
+        ->select('COUNT(f)')
+        ->where('f.status = 1');
+        $query1 = $qb1->getQuery();
+
+        $qb2 = $this->createQueryBuilder('f')
+        ->select('COUNT(f)')
+        ->where('f.status = 2');
+        $query2 = $qb2->getQuery();
+
+        $qb3 = $this->createQueryBuilder('f')
+        ->select('COUNT(f)')
+        ->where('f.status = 3');
+        $query3 = $qb3->getQuery();
+
+
+
+        $openFeedbacksCount = strval($query0->getSingleScalarResult());
+        $inProgressFeedbacksCount = strval($query1->getSingleScalarResult());
+        $toReviewFeedbacksCount = strval($query2->getSingleScalarResult());
+        $completedFeedbacksCount = strval($query3->getSingleScalarResult());
+
+
+        $feedbacksStatus = [
+            'openFeedbacks' => $openFeedbacksCount,
+            'inProgressFeedbacks' => $inProgressFeedbacksCount,
+            'toReviewFeedbacks' => $toReviewFeedbacksCount,
+            'completedFeedbacks' => $completedFeedbacksCount
+        ];
+
+        return $feedbacksStatus;
+
+    }
     
 
 
